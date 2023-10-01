@@ -73,12 +73,12 @@ pipeline {
                 script {
                   sh """ 
                   whoami
-                  cd /var/www/ 
-                  mkdir codeBase
-                  cd codeBase
+                  cd /var/www/  
+                  cd codeBase/
                   git init
                   git clone --branch ${env.BRANCH_NAME} https://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@github.com/deepaksharma26/MeritMission.git
-                  
+                  cd MeritMission
+                  ls
                   """
                 }
             }
