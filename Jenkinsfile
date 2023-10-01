@@ -44,6 +44,9 @@ pipeline {
     }
 
     stages {
+        agent {
+            docker { image 'node:18.18.0-alpine3.18' }
+        }
         stage('Checkout') {
             steps {
                 // Check out your source code from your version control system (e.g., Git)
@@ -54,8 +57,8 @@ pipeline {
         stage('Connection') { 
             steps {
                 script {
-                  sh """   
-                   node -v
+                  sh """ 
+                  node -v   
                     cd 
                     rm -rf .ssh
                     rm id_rsa
