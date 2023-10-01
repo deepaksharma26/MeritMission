@@ -33,7 +33,7 @@ def getTargets() {
 pipeline {
     options{
         timestamps()
-        ansiColor('xterm')
+        // ansiColor('xterm')
     }
     agent any
     // agent {
