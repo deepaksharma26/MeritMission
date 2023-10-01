@@ -1,19 +1,102 @@
+def applicationName = "Merit Mission School"
+def vaultUrl = ''
+def vaultPath = ''
+def json
+def secrets
+def gitInfo
+def getEnvironment() {
+    if(env.BRANCH_NAME == 'master'){
+        return 'production'
+    } else if(env.BRANCH_NAME == 'development){
+        return 'development'
+    }
+
+    return env.BRANCH_NAME
+}
+
+def getTargets() {
+  if(env.BRANCH_NAME == 'master'){
+        return [
+            server_address : '',
+            server_username : '',
+            server_password : ''
+        ]
+    } else if(env.BRANCH_NAME == 'development){
+        return [
+            server_address : '',
+            server_username : '',
+            server_password : ''
+        ]
+    }
+}              
+
 pipeline {
-    agent any  
+    options{
+        timestamps()
+        ansiColor('xterm')
+    }
+    agent {
+        kubernetes {
+            inheritFrom 'docker-v20-10
+            constainerTemplate{
+                name 'docker-v20-10'
+                image 'docker pull node'
+            }
+          podRetention onFailure()  
+        }
+    }
     stages {
+        stage('init') {
+            checkout scm
+            script {
+                gitInfo = getGitInfo()
+                echo "Owner ${gitInfo.git_author} (${gitInfo.git_email})"
+            }
+        }
+        stage('Vault') {
+            steps{
+                // secrets = vaultGetSecrets()
+                // json = vaultGetSecrets(secrets.token,"github","${vaultPath}/login_key")
+                // writeFile file: '.env', text:"${json.value}"
+            }
+        }
         stage('Install Modules'){
             steps{
-                sh 'apt-get update'
-                sh 'apt-get upgrade'
-                sh 'apt-get install openssh-client'
+                sh '''
+                    apk search openssh
+                    apk add openssh
+                    apk add --update --no-cache openssh sshpass
+                    cd 
+                    mkdir .ssh
+                    touch config
+                    echo "StrictHostKeyChecking no" > config
+                    echo "UserKnownHostsFile /dev/null" >> config
+                    touch authorized_keys
+                    touch known_host
+                    cat /dev/null > known_hosts
+                    ssh-keygen -t rsa -N '' -f id_rsa
+                    chmod 600 id_rsa.pub
+                    chmod 600 id_rsa
+                    chmod 600 known_host
+                    chmod 600 authorized_keys
+                    chmod 600 config
+                    cat known_hosts
+                    cat config 
+                    
+                    
+                '''
+               sh '''
+                sshpass -p Deepak@26 ssh-copy-id -i ~/.ssh/id_rsa/pub root@143.244.142.123
+                // scp -r .env root@143.244.142.123:/var/www
+                ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@143.244.142.123 /bin/bash << EOT
+                yes | cp -r build/* /var/www/html
+               '''
             }
         }
         stage('Connection') {
             steps{
-                
-                sh 'sshpass -p Deepak@26 ssh -o StrictHostKeyChecking=no root@143.244.142.123'
-                sh '/var/www/html'
-                sh 'ls'
+                 
+                sh 'netstat -antpe'
             }
         }
         stage('Code Clone') {
@@ -21,5 +104,14 @@ pipeline {
                sh 'ls'  
             } 
         }
+    }
+}
+
+post{
+    success {
+        logstashPush('Success')
+    }
+    failure {
+        logstashPush('Failure')
     }
 }
