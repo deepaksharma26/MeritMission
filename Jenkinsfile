@@ -35,14 +35,14 @@ pipeline {
         timestamps()
         // ansiColor('xterm')
     }
-    // agent any
-    agent {
-        docker {
+     agent any
+    // agent {
+    //     Built-In Node {
             
-            image 'node:6-alpine'
+    //         image 'node:6-alpine'
             
-        }
-    }
+    //     }
+    // }
     stages {
         // stage('init') {
         //     checkout scm
