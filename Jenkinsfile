@@ -37,7 +37,7 @@ pipeline {
     }
     agent {
         kubernetes {
-            inheritFrom 'docker-v20-10
+            inheritFrom 'docker-v20-10'
             constainerTemplate{
                 name 'docker-v20-10'
                 image 'docker pull node'
