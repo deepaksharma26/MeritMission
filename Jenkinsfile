@@ -63,11 +63,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                  sh """  
-                    apt update
-                    apt search openssh
-                    apt add openssh
-                    apt add --update --no-cache openssh sshpass
+                  sh """    
                     cd 
                     mkdir .ssh
                     touch config
