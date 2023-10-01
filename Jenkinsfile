@@ -63,22 +63,44 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
+                  sh """  
+                    apt update
+                    apt search openssh
+                    apt add openssh
+                    apt add --update --no-cache openssh sshpass
+                    cd 
+                    mkdir .ssh
+                    touch config
+                    echo "StrictHostKeyChecking no" > config
+                    echo "UserKnownHostsFile /dev/null" >> config
+                    touch authorized_keys
+                    touch known_host
+                    cat /dev/null > known_hosts
+                    ssh-keygen -t rsa -N '' -f id_rsa
+                    chmod 600 id_rsa.pub
+                    chmod 600 id_rsa
+                    chmod 600 known_host
+                    chmod 600 authorized_keys
+                    chmod 600 config
+                    cat known_hosts
+                    cat config 
+                    """
                     // Use SSH Agent to securely connect to the remote server
-                    sshagent(credentials: ['your_ssh_credentials_id']) {
-                        // Copy the build to the remote server
-                        sh "sshpass -p Deepak@26 ssh-copy-id -i ~/.ssh/id_rsa/pub root@143.244.142.123"
-                        sh "scp -o StrictHostKeyChecking=no -r ./* root@143.244.142.123:${REMOTE_DIR}"
-                        sh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@143.244.142.123 /bin/bash << EOT"
-                        echo hostname -i
-                        echo pwd
-                        // // SSH into the remote server and perform deployment steps
-                        // sshPut remote: "ssh://${SSH_USER}@${HOST}", from: 'path/to/your/remote/deployment/script.sh', into: 'path/on/remote/server'
-                        // sshScript remote: "ssh://${SSH_USER}@${HOST}", script: """
-                        //     cd ${REMOTE_DIR}
-                        //     NODE_ENV=${NODE_ENV} npm ${NPM_COMMAND}
-                        //     # Add additional deployment steps here
-                        // """
-                    }
+                    // sshagent(credentials: ['your_ssh_credentials_id']) {
+                    //     // Copy the build to the remote server
+                    //     sh "sshpass -p Deepak@26 ssh-copy-id -i ~/.ssh/id_rsa/pub root@143.244.142.123"
+                    //     sh "scp -o StrictHostKeyChecking=no -r ./* root@143.244.142.123:${REMOTE_DIR}"
+                    //     sh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@143.244.142.123 /bin/bash << EOT"
+                    //     echo hostname -i
+                    //     echo pwd
+                    //     // // SSH into the remote server and perform deployment steps
+                    //     // sshPut remote: "ssh://${SSH_USER}@${HOST}", from: 'path/to/your/remote/deployment/script.sh', into: 'path/on/remote/server'
+                    //     // sshScript remote: "ssh://${SSH_USER}@${HOST}", script: """
+                    //     //     cd ${REMOTE_DIR}
+                    //     //     NODE_ENV=${NODE_ENV} npm ${NPM_COMMAND}
+                    //     //     # Add additional deployment steps here
+                    //     // """
+                    // }
                 }
             }
         }
