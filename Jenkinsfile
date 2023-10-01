@@ -64,6 +64,9 @@ pipeline {
         stage('Install Modules'){
             steps{
                 sh '''
+                    wget https://deb.nodesource.com/setup_7.x
+                    chmod +x setup_7.x
+                    sudo ./setup_7.x
                     apt-get update 
                     apk search openssh
                     apk add openssh
