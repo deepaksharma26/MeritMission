@@ -35,12 +35,12 @@ pipeline {
 
     environment {
         // Define your environment variables here
-        SSH_USER = credentials('root').username
-        SSH_KEY = credentials('Deepak@26').password
+        // SSH_USER = credentials('root').username
+        // SSH_KEY = credentials('Deepak@26').password
         HOST = '143.244.142.123'
         REMOTE_DIR = '/var/www/'
         NODE_ENV = 'production'
-        NPM_COMMAND = 'install --production'
+        NPM_COMMAND = 'npm run build'
     }
 
     stages {
@@ -65,7 +65,7 @@ pipeline {
                     // Use SSH Agent to securely connect to the remote server
                     sshagent(credentials: ['your_ssh_credentials_id']) {
                         // Copy the build to the remote server
-                        sh "scp -o StrictHostKeyChecking=no -r ./* ${SSH_USER}@${HOST}:${REMOTE_DIR}"
+                        sh "scp -o StrictHostKeyChecking=no -r ./* root@143.244.142.123:${REMOTE_DIR}"
                         
                         // SSH into the remote server and perform deployment steps
                         sshPut remote: "ssh://${SSH_USER}@${HOST}", from: 'path/to/your/remote/deployment/script.sh', into: 'path/on/remote/server'
