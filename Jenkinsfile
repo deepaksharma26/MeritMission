@@ -53,6 +53,7 @@ pipeline {
 
         stage('Build and Test') {
             steps {
+                echo "Build Stage"
                 // Install dependencies and run tests (if applicable)
                 // sh 'npm install' 
                 // Add additional build and test steps here
