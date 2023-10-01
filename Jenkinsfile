@@ -47,7 +47,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Check out your source code from your version control system (e.g., Git)
-                git 'https://github.com/your/repo.git'
+                git 'https://github.com/deepaksharma26/MeritMission.git'
             }
         }
 
