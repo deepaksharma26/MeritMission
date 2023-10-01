@@ -101,6 +101,7 @@ pipeline {
                 script {
                   sh """ 
                      cd ..
+                     cd ..
                      rm -rf codeBase
                   """
                 }

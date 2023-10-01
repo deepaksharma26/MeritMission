@@ -1,8 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
-import { AppRoutes } from './routes/Routes';
-import { Grommet } from 'grommet';
-
+import { AppRoutes } from './routes/Routes'; 
+import { BrowserRouter } from "react-router-dom";
 function App() {
   return ( 
       <BrowserRouter>

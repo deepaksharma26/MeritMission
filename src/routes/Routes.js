@@ -4,7 +4,7 @@ import { Home } from "../components/Home";
 export const AppRoutes = () =>{
 
     return(
-        <Routes>
+        <Routes> 
             <Route path={'/'} element={<Home/>} />
         </Routes>
     )
