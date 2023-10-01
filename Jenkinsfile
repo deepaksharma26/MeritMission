@@ -2,7 +2,12 @@ pipeline {
     agent any  
     stages {
         stage('Connection') {
-            // sh 'ssh root@143.244.142.123'
+            steps{
+                
+                sh 'sshpass -p Deepak@26 ssh -o StrictHostKeyChecking=no root@143.244.142.123'
+                sh '/var/www/html'
+                sh 'ls'
+            }
         }
         stage('Code Clone') {
             steps {
