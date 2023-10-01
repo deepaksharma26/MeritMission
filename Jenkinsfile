@@ -1,29 +1,12 @@
 pipeline {
-  agent any
-    
-  tools {nodejs "node"}
-    
-  stages {
-        
-    stage('Git') {
-      steps {
-        git 'https://github.com/deepaksharma26/MeritMission/'
-      }
+    agent any  
+    stages {
+        stage('Stage 1') {
+            steps {
+               sh 'ls'
+               sh 'npm install'
+              sh 'ls'
+            }
+        }
     }
-     
-    stage('Build') {
-      steps {
-        sh 'npm install'
-         sh 'npm run build'
-          sh 'ls'
-      }
-    }  
-    
-            
-    stage('Test') {
-      steps {
-        sh 'node test'
-      }
-    }
-  }
 }
