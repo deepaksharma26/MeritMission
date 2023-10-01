@@ -31,22 +31,14 @@ def getTargets() {
 }     
 
 pipeline {
-    agent any
-
-    environment {
-        // Define your environment variables here
-        // SSH_USER = credentials('root').username
-        // SSH_KEY = credentials('Deepak@26').password
-        HOST = '143.244.142.123'
-        REMOTE_DIR = '/var/www/'
-        NODE_ENV = 'production'
-        NPM_COMMAND = 'npm run build'
+     agent {
+        docker { image 'node:18.18.0-alpine3.18' }
     }
 
+     
+
     stages {
-        agent {
-            docker { image 'node:18.18.0-alpine3.18' }
-        }
+       
         stage('Checkout') {
             steps {
                 // Check out your source code from your version control system (e.g., Git)
