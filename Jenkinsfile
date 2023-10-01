@@ -72,7 +72,7 @@ pipeline {
             steps {
                 script {
                   sh """ 
-                  sudo -S Deepak@26 su
+                 
                   whoami
                   cd /var/www/ 
                   mkdir codeBase
