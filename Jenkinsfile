@@ -72,8 +72,7 @@ pipeline {
             steps {
                 script {
                   sh """ 
-                  sshpass -p Deepak@26 ssh-copy-id -i ~/.ssh/id_rsa/pub root@143.244.142.12
-                  ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@143.244.142.123 /bin/bash << EOT
+                  whoami
                   cd /var/www/ 
                   mkdir codeBase
                   cd codeBase
