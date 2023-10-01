@@ -51,6 +51,7 @@ pipeline {
                   sh """ 
                   node -v 
                   npm install
+                  npm run build
                   ls                  
                   """
                 }
@@ -89,7 +90,7 @@ pipeline {
             steps {
                 script {
                   sh """ 
-                    scp -r * root@143.244.142.123:/var/www/html
+                    scp -r build/* root@143.244.142.123:/var/www/html
                   """
                 }
             }
