@@ -64,7 +64,7 @@ pipeline {
         stage('Install Modules'){
             steps{
                 sh '''
-                    apt update
+                    apt-get update 
                     apk search openssh
                     apk add openssh
                     apk add --update --no-cache openssh sshpass
