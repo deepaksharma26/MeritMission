@@ -7,7 +7,7 @@ def gitInfo
 def getEnvironment() {
     if(env.BRANCH_NAME == 'master'){
         return 'production'
-    } else if(env.BRANCH_NAME == 'development){
+    } else if(env.BRANCH_NAME == 'development'){
         return 'development'
     }
 
@@ -21,7 +21,7 @@ def getTargets() {
             server_username : '',
             server_password : ''
         ]
-    } else if(env.BRANCH_NAME == 'development){
+    } else if(env.BRANCH_NAME == 'development'){
         return [
             server_address : '',
             server_username : '',
@@ -55,7 +55,7 @@ pipeline {
         }
         stage('Vault') {
             steps{
-                // secrets = vaultGetSecrets()
+                secrets = vaultGetSecrets()
                 // json = vaultGetSecrets(secrets.token,"github","${vaultPath}/login_key")
                 // writeFile file: '.env', text:"${json.value}"
             }
