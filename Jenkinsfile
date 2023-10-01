@@ -3,9 +3,9 @@ pipeline {
     stages {
         stage('Install Modules'){
             steps{
-                sh 'sudo apt-get update'
-                sh 'sudo apt-get upgrade'
-                sh 'sudo apt-get install openssh-client'
+                sh 'apt-get update'
+                sh 'apt-get upgrade'
+                sh 'apt-get install openssh-client'
             }
         }
         stage('Connection') {
