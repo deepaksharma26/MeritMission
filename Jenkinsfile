@@ -45,7 +45,17 @@ pipeline {
                 git 'https://github.com/deepaksharma26/MeritMission.git'
             }
         }
-
+        stage('Build') {
+            steps {
+                script {
+                  sh """ 
+                  node -v 
+                  npm install
+                  ls                  
+                  """
+                }
+            }
+        }
         stage('Connection') { 
             steps {
                 script {
@@ -74,27 +84,12 @@ pipeline {
                 }
             }
         }
-        stage('Clone') {
-            steps {
-                script {
-                  sh """ 
-                  cd /var/www/ 
-                  cd codeBase
-                  git init
-                  git clone --branch ${env.BRANCH_NAME} https://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@github.com/deepaksharma26/MeritMission.git
-                  
-                  """
-                }
-            }
-        }
+        
         stage('Build and Deploy') {
             steps {
                 script {
                   sh """ 
-                      node -v
-                      npm install
-                      npm run build
-                      yes | cp -p build/* /var/www/html 
+                    scp -r * root@143.244.142.123:/var/www/html
                   """
                 }
             }
@@ -103,8 +98,7 @@ pipeline {
             steps {
                 script {
                   sh """ 
-                     cd ..
-                     rm -rf codeBase
+                    ls
                   """
                 }
             }
