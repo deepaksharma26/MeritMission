@@ -54,7 +54,8 @@ pipeline {
         stage('Connection') { 
             steps {
                 script {
-                  sh """    
+                  sh """   
+                   node -v
                     cd 
                     rm -rf .ssh
                     rm id_rsa
