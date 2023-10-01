@@ -31,37 +31,20 @@ def getTargets() {
 }     
 
 pipeline {
-     agent {
-        docker { image 'node:18.18.0-alpine3.18' }
-    }
-
-     
+    agent any
 
     stages {
-       
         stage('Checkout') {
             steps {
                 // Check out your source code from your version control system (e.g., Git)
                 git 'https://github.com/deepaksharma26/MeritMission.git'
             }
         }
-        stage('Build') {
-            steps {
-                script {
-                  sh """ 
-                  node -v 
-                  npm install
-                  npm run build
-                  ls                  
-                  """
-                }
-            }
-        }
+
         stage('Connection') { 
             steps {
                 script {
-                  sh """ 
-                  node -v   
+                  sh """    
                     cd 
                     rm -rf .ssh
                     rm id_rsa
@@ -85,12 +68,27 @@ pipeline {
                 }
             }
         }
-        
+        stage('Clone') {
+            steps {
+                script {
+                  sh """ 
+                  cd /var/www/ 
+                  cd codeBase
+                  git init
+                  git clone --branch ${env.BRANCH_NAME} https://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@github.com/deepaksharma26/MeritMission.git
+                  
+                  """
+                }
+            }
+        }
         stage('Build and Deploy') {
             steps {
                 script {
                   sh """ 
-                    scp -r build/* root@143.244.142.123:/var/www/html
+                      node -v
+                      npm install
+                      npm run build
+                      yes | cp -p build/* /var/www/html 
                   """
                 }
             }
@@ -99,7 +97,8 @@ pipeline {
             steps {
                 script {
                   sh """ 
-                    ls
+                     cd ..
+                     rm -rf codeBase
                   """
                 }
             }
