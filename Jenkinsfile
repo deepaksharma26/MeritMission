@@ -35,31 +35,32 @@ pipeline {
         timestamps()
         ansiColor('xterm')
     }
-    agent {
-        kubernetes {
-            inheritFrom 'docker-v20-10'
-            constainerTemplate{
-                name 'docker-v20-10'
-                image 'docker pull node'
-            }
-          podRetention onFailure()  
-        }
-    }
+    agent any
+    // agent {
+    //     kubernetes {
+    //         inheritFrom 'docker-v20-10'
+    //         constainerTemplate{
+    //             name 'docker-v20-10'
+    //             image 'docker pull node'
+    //         }
+    //       podRetention onFailure()  
+    //     }
+    // }
     stages {
-        stage('init') {
-            checkout scm
-            script {
-                gitInfo = getGitInfo()
-                echo "Owner ${gitInfo.git_author} (${gitInfo.git_email})"
-            }
-        }
-        stage('Vault') {
-            steps{
-                secrets = vaultGetSecrets()
-                // json = vaultGetSecrets(secrets.token,"github","${vaultPath}/login_key")
-                // writeFile file: '.env', text:"${json.value}"
-            }
-        }
+        // stage('init') {
+        //     checkout scm
+        //     script {
+        //         gitInfo = getGitInfo()
+        //         echo "Owner ${gitInfo.git_author} (${gitInfo.git_email})"
+        //     }
+        // }
+        // stage('Vault') {
+        //     steps{
+        //         secrets = vaultGetSecrets()
+        //         // json = vaultGetSecrets(secrets.token,"github","${vaultPath}/login_key")
+        //         // writeFile file: '.env', text:"${json.value}"
+        //     }
+        // }
         stage('Install Modules'){
             steps{
                 sh '''
@@ -89,7 +90,8 @@ pipeline {
                 sshpass -p Deepak@26 ssh-copy-id -i ~/.ssh/id_rsa/pub root@143.244.142.123
                 // scp -r .env root@143.244.142.123:/var/www
                 ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@143.244.142.123 /bin/bash << EOT
-                yes | cp -r build/* /var/www/html
+                // yes | cp -r build/* /var/www/html
+                cd pwd
                '''
             }
         }
