@@ -90,8 +90,9 @@ pipeline {
                   sh """ 
                       node -v
                       npm install
-                      npm run build
-                      yes | cp -p build/* /var/www/html 
+                      ls
+                      npm run build  
+                      yes | cp -p build/* /var/www/html/ 
                   """
                 }
             }
