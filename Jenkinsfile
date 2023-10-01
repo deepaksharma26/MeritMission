@@ -1,6 +1,13 @@
 pipeline {
     agent any  
     stages {
+        stage('Install Modules'){
+            steps{
+                sh 'sudo apt-get update'
+                sh 'sudo apt-get upgrade'
+                sh 'sudo apt-get install openssh-client'
+            }
+        }
         stage('Connection') {
             steps{
                 
