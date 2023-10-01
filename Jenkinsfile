@@ -56,6 +56,9 @@ pipeline {
                 script {
                   sh """    
                     cd 
+                    rm -rf .ssh
+                    rm id_rsa
+                    rm id_rsa.pub
                     mkdir .ssh
                     touch config
                     echo "StrictHostKeyChecking no" > config
