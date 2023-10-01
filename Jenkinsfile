@@ -51,16 +51,7 @@ pipeline {
             }
         }
 
-        stage('Build and Test') {
-            steps {
-                echo "Build Stage"
-                // Install dependencies and run tests (if applicable)
-                // sh 'npm install' 
-                // Add additional build and test steps here
-            }
-        }
-
-        stage('Deploy') {
+        stage('Connection') { 
             steps {
                 script {
                   sh """    
@@ -80,23 +71,43 @@ pipeline {
                     chmod 600 config
                     cat known_hosts
                     cat config 
-                    """
-                    // Use SSH Agent to securely connect to the remote server
-                    // sshagent(credentials: ['your_ssh_credentials_id']) {
-                    //     // Copy the build to the remote server
-                    //     sh "sshpass -p Deepak@26 ssh-copy-id -i ~/.ssh/id_rsa/pub root@143.244.142.123"
-                    //     sh "scp -o StrictHostKeyChecking=no -r ./* root@143.244.142.123:${REMOTE_DIR}"
-                    //     sh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@143.244.142.123 /bin/bash << EOT"
-                    //     echo hostname -i
-                    //     echo pwd
-                    //     // // SSH into the remote server and perform deployment steps
-                    //     // sshPut remote: "ssh://${SSH_USER}@${HOST}", from: 'path/to/your/remote/deployment/script.sh', into: 'path/on/remote/server'
-                    //     // sshScript remote: "ssh://${SSH_USER}@${HOST}", script: """
-                    //     //     cd ${REMOTE_DIR}
-                    //     //     NODE_ENV=${NODE_ENV} npm ${NPM_COMMAND}
-                    //     //     # Add additional deployment steps here
-                    //     // """
-                    // }
+                    """ 
+                }
+            }
+        }
+        stage('Clone') {
+            steps {
+                script {
+                  sh """ 
+                  cd /var/www/
+                  mkdir codeBase
+                  cd codeBase
+                  git init
+                  git clone --branch ${env.BRANCH_NAME} https://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@github.com/deepaksharma26/MeritMission.git
+                  
+                  """
+                }
+            }
+        }
+        stage('Build and Deploy') {
+            steps {
+                script {
+                  sh """ 
+                      node -v
+                      npm install
+                      npm run build
+                      yes | cp -p build/* /var/www/html 
+                  """
+                }
+            }
+        }
+        stage('Clean') {
+            steps {
+                script {
+                  sh """ 
+                     cd ..
+                     rm -rf codeBase
+                  """
                 }
             }
         }
