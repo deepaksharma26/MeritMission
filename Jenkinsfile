@@ -6,7 +6,7 @@ pipeline {
                sh 'ls'
                sh 'npm install'
               sh 'ls'
-            }
+            } 
         }
     }
 }
