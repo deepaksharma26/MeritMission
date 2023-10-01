@@ -28,93 +28,61 @@ def getTargets() {
             server_password : ''
         ]
     }
-}              
+}     
 
 pipeline {
-    options{
-        timestamps()
-        // ansiColor('xterm')
-    }
-     agent any
-    // agent {
-    //     Built-In Node {
-            
-    //         image 'node:6-alpine'
-            
-    //     }
-    // }
-    stages {
-        // stage('init') {
-        //     checkout scm
-        //     script {
-        //         gitInfo = getGitInfo()
-        //         echo "Owner ${gitInfo.git_author} (${gitInfo.git_email})"
-        //     }
-        // }
-        // stage('Vault') {
-        //     steps{
-        //         secrets = vaultGetSecrets()
-        //         // json = vaultGetSecrets(secrets.token,"github","${vaultPath}/login_key")
-        //         // writeFile file: '.env', text:"${json.value}"
-        //     }
-        // }
-        stage('Install Modules'){
-            steps{
-                // sh '''
-                //     wget https://deb.nodesource.com/setup_7.x
-                //     chmod +x setup_7.x
-                //     sudo ./setup_7.x
-                //     apt-get update 
-                //     apk search openssh
-                //     apk add openssh
-                //     apk add --update --no-cache openssh sshpass
-                //     cd 
-                //     mkdir .ssh
-                //     touch config
-                //     echo "StrictHostKeyChecking no" > config
-                //     echo "UserKnownHostsFile /dev/null" >> config
-                //     touch authorized_keys
-                //     touch known_host
-                //     cat /dev/null > known_hosts
-                //     ssh-keygen -t rsa -N '' -f id_rsa
-                //     chmod 600 id_rsa.pub
-                //     chmod 600 id_rsa
-                //     chmod 600 known_host
-                //     chmod 600 authorized_keys
-                //     chmod 600 config
-                //     cat known_hosts
-                //     cat config 
-                    
-                    
-                // '''
-               sh '''
-                sshpass -p Deepak@26 ssh-copy-id -i ~/.ssh/id_rsa/pub root@143.244.142.123 /bin/bash << EOT
-                // scp -r .env root@143.244.142.123:/var/www
-                // ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@143.244.142.123 /bin/bash << EOT
-                // yes | cp -r build/* /var/www/html
-                cat pwd
-               '''
-            }
-        }
-        stage('Connection') {
-            steps{
-                 
-                sh 'netstat -antpe'
-            }
-        }
-        stage('Code Clone') {
-            steps {
-               sh 'ls'  
-            } 
-        }
-    }
-}
+    agent any
 
-post{
-    success {
-        logstashPush('Success')
+    environment {
+        // Define your environment variables here
+        SSH_USER = credentials('root').username
+        SSH_KEY = credentials('Deepak@26').password
+        HOST = '143.244.142.123'
+        REMOTE_DIR = '/var/www/'
+        NODE_ENV = 'production'
+        NPM_COMMAND = 'install --production'
     }
-    failure {
-        logstashPush('Failure')
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Check out your source code from your version control system (e.g., Git)
+                git 'https://github.com/your/repo.git'
+            }
+        }
+
+        stage('Build and Test') {
+            steps {
+                // Install dependencies and run tests (if applicable)
+                sh 'npm install'
+                // Add additional build and test steps here
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    // Use SSH Agent to securely connect to the remote server
+                    sshagent(credentials: ['your_ssh_credentials_id']) {
+                        // Copy the build to the remote server
+                        sh "scp -o StrictHostKeyChecking=no -r ./* ${SSH_USER}@${HOST}:${REMOTE_DIR}"
+                        
+                        // SSH into the remote server and perform deployment steps
+                        sshPut remote: "ssh://${SSH_USER}@${HOST}", from: 'path/to/your/remote/deployment/script.sh', into: 'path/on/remote/server'
+                        sshScript remote: "ssh://${SSH_USER}@${HOST}", script: """
+                            cd ${REMOTE_DIR}
+                            NODE_ENV=${NODE_ENV} npm ${NPM_COMMAND}
+                            # Add additional deployment steps here
+                        """
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            // Clean up or perform additional steps after deployment
+        }
     }
 }
