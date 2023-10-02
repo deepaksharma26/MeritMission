@@ -103,22 +103,5 @@ pipeline {
                 }
             }
         }
-        stage('Clean') {
-            steps {
-                script {
-                  sh """ 
-                     cd ..
-                     cd ..
-                     rm -rf codeBase
-                  """
-                }
-            }
-        }
     }
-
-    // post {
-    //     always {
-    //         // Clean up or perform additional steps after deployment
-    //     }
-    // }
 }
