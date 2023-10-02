@@ -56,6 +56,7 @@ pipeline {
             stage('Build & Test') {
             steps {
                 script {
+                  git 'https://github.com/deepaksharma26/MeritMission.git'
                   sh """  
                   whoami 
                   npm install
