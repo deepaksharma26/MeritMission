@@ -53,11 +53,23 @@ pipeline {
         //         }
         //     }
         // }
+            stage('Build & Test') {
+            steps {
+                script {
+                  sh """  
+                  whoami 
+                  npm install
+                  ls
+                  npm run build  
+                  npm test 
+                  """
+                }
+            }
+        }
         stage('Connection') { 
             steps {
                 script {
-                  sh """    
-                    node -v
+                  sh """  
                     cd 
                     rm -rf .ssh
                     rm id_rsa
@@ -81,35 +93,12 @@ pipeline {
                 }
             }
         }
-        stage('Clone') {
-            steps {
-                script {
-                  sh """ 
-                 
-                  whoami
-                  cd /var/www/ 
-                  mkdir codeBase
-                  cd codeBase/
-                  git init
-                  git clone --branch ${env.BRANCH_NAME} https://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@github.com/deepaksharma26/MeritMission.git
-                  cd MeritMission 
-                  npm config rm proxy
-                  npm config rm https-proxy
-                  npm install npm@latest -g
-                  npm install
-                  ls
-                  npm run build  
-                  yes | cp -p build/* /var/www/html/ 
-                  """
-                }
-            }
-        }
+    
         stage('Build and Deploy') {
             steps {
                 script {
                   sh """ 
-                      node -v
-                     
+                      scp -r build/* root@143.244.142.123:/var/www/html
                   """
                 }
             }
