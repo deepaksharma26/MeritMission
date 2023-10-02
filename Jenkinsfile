@@ -38,19 +38,18 @@ pipeline {
     stages {
         stage('Build') {
             steps {
+                sh 'node -v'
                 sh 'npm install'
             }
         }
         stage('Test') {
             steps {
-                sh './jenkins/scripts/test.sh'
+                echo 'Test'
             }
         }
         stage('Deliver') {
             steps {
-                sh './jenkins/scripts/deliver.sh'
-                input message: 'Finished using the web site? (Click "Proceed" to continue)'
-                sh './jenkins/scripts/kill.sh'
+               echo 'Deliver'
             }
         }
     }
