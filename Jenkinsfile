@@ -44,7 +44,7 @@ pipeline {
             steps {
                 // Checkout your source code from version control
                 // For example, if using Git:
-                git branch: ${env.BRANCH_NAME}, url: 'https://github.com/deepaksharma26/MeritMission.git'
+                git branch: '${env.BRANCH_NAME}', url: 'https://github.com/deepaksharma26/MeritMission.git'
             }
         }
 
