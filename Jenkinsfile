@@ -54,7 +54,7 @@ pipeline {
         //     }
         // }
         stage('Connection') { 
-            steps {
+            steps { 
                 script {
                   sh """    
                     cd 
