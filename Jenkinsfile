@@ -41,6 +41,18 @@ pipeline {
             }
         }
 
+        // stage('Vault') {
+        //     steps {
+        //         // Authenticate with Vault
+        //         withCredentials([[$class: 'VaultSecret', path: 'secret/foo', secretValues: [
+        //             [$class: 'VaultSecretValue', envVar: 'API_KEY', vaultKey: 'api_key'],
+        //             [$class: 'VaultSecretValue', envVar: 'DB_PASSWORD', vaultKey: 'db_password']
+        //         ]]]) {
+        //             // Now you can use the API_KEY and DB_PASSWORD as environment variables
+        //             sh './deploy_script.sh'
+        //         }
+        //     }
+        // }
         stage('Connection') { 
             steps {
                 script {
@@ -79,8 +91,10 @@ pipeline {
                   cd codeBase/
                   git init
                   git clone --branch ${env.BRANCH_NAME} https://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@github.com/deepaksharma26/MeritMission.git
-                  cd MeritMission
-                  npm config set registry http://registry.npmjs.org/
+                  cd MeritMission 
+                  npm config rm proxy
+                  npm config rm https-proxy
+                  npm install npm@latest -g
                   npm install
                   ls
                   npm run build  
