@@ -40,70 +40,31 @@ pipeline {
                 git 'https://github.com/deepaksharma26/MeritMission.git'
             }
         }
+        stage('Checkout') {
+            steps {
+                // Checkout your source code from version control
+                // For example, if using Git:
+                git branch: ${env.BRANCH_NAME}, url: 'https://github.com/deepaksharma26/MeritMission.git'
+            }
+        }
 
-        // stage('Vault') {
+      
+            stage('Build') {
+            steps {
+                // Use Node.js and npm to build the React app
+                sh "npm install"
+                sh "npm run build"
+                sh "ls"
+            }
+        } 
+        // stage('Build and Deploy') {
         //     steps {
-        //         // Authenticate with Vault
-        //         withCredentials([[$class: 'VaultSecret', path: 'secret/foo', secretValues: [
-        //             [$class: 'VaultSecretValue', envVar: 'API_KEY', vaultKey: 'api_key'],
-        //             [$class: 'VaultSecretValue', envVar: 'DB_PASSWORD', vaultKey: 'db_password']
-        //         ]]]) {
-        //             // Now you can use the API_KEY and DB_PASSWORD as environment variables
-        //             sh './deploy_script.sh'
+        //         script {
+        //           sh """ 
+        //               scp -r build/* root@143.244.142.123:/var/www/html
+        //           """
         //         }
         //     }
         // }
-            stage('Build & Test') {
-            steps {
-                script {
-                  git 'https://github.com/deepaksharma26/MeritMission.git'
-                  sh """  
-                  git clone
-                  whoami 
-                  npm install
-                  ls
-                  npm run build  
-                  npm test 
-                  """
-                }
-            }
-        }
-        stage('Connection') { 
-            steps {
-                script {
-                  sh """  
-                    cd 
-                    rm -rf .ssh
-                    rm id_rsa
-                    rm id_rsa.pub
-                    mkdir .ssh
-                    touch config
-                    echo "StrictHostKeyChecking no" > config
-                    echo "UserKnownHostsFile /dev/null" >> config
-                    touch authorized_keys
-                    touch known_host
-                    cat /dev/null > known_hosts
-                    ssh-keygen -t rsa -N '' -f id_rsa
-                    chmod 600 id_rsa.pub
-                    chmod 600 id_rsa
-                    chmod 600 known_host
-                    chmod 600 authorized_keys
-                    chmod 600 config
-                    cat known_hosts
-                    cat config 
-                    """ 
-                }
-            }
-        }
-    
-        stage('Build and Deploy') {
-            steps {
-                script {
-                  sh """ 
-                      scp -r build/* root@143.244.142.123:/var/www/html
-                  """
-                }
-            }
-        }
     }
 }
