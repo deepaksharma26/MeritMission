@@ -94,7 +94,7 @@ pipeline {
                   cd MeritMission 
                   npm config rm proxy
                   npm config rm https-proxy
-                  npm install npm@latest -g
+                  
                   npm install
                   ls
                   npm run build  
