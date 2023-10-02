@@ -58,6 +58,7 @@ pipeline {
                 script {
                   git 'https://github.com/deepaksharma26/MeritMission.git'
                   sh """  
+                  git clone
                   whoami 
                   npm install
                   ls
