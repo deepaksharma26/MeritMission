@@ -31,29 +31,43 @@ def getTargets() {
 }     
 
 pipeline {
-    agent any
-    environment {
-        CI = 'true'
-    }
-    stages {
-        stage('Build') {
-            steps {
-                sh 'hostname'
-                sh 'npm install'
-            }
-        }
-        stage('Test') {
-            steps {
-                sh './jenkins/scripts/test.sh'
-            }
-        }
-        stage('Deliver') {
-            steps {
-                sh 'hostname'
-                sh './jenkins/scripts/deliver.sh'
-                input message: 'Finished using the web site? (Click "Proceed" to continue)'
-                sh './jenkins/scripts/kill.sh'
-            }
+  agent { dockerfile true }
+
+  stages {
+    stage('Checkout') {
+        steps {
+                // Check out your source code from your version control system (e.g., Git)
+            git 'https://github.com/deepaksharma26/MeritMission.git'
         }
     }
+    stage("install") {
+      steps {
+        sh 'yarn install'
+      }
+    }
+    stage("styles"){
+      steps{
+        sh 'yarn styles'
+      }
+    }
+    stage("test"){
+      steps {
+        sh 'yarn test'
+      }
+    }
+    stage("build"){
+      steps{
+        sh('yarn build')
+      }
+    }
+    stage("pre-deploy"){
+      steps{
+        sh('ls -la')
+        sh('pwd')
+        sh('sshpass -p Deepak@26 ssh-copy-id -i ~/.ssh/id_rsa/pub root@143.244.142.123') 
+        sh('sshpass -p Deepak@26 scp -v -r $WORKSPACE/build root@143.244.142.123:"/var/www/html"')
+        sh('sshpass -p Deepak@26 ssh -o StrictHostKeyChecking=no root@143.244.142.123 -t "echo $user | sudo -S cp -r path /var/www/html"')
+      }
+    }
+  }
 }
