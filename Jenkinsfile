@@ -31,40 +31,32 @@ def getTargets() {
 }     
 
 pipeline {
-    agent any
-
+    agent {
+        docker {
+            image 'node:lts-buster-slim'
+            args '-p 3000:3000'
+        }
+    }
+    environment {
+        CI = 'true'
+    }
     stages {
-        stage('Checkout') {
+        stage('Build') {
             steps {
-                // Check out your source code from your version control system (e.g., Git)
-                git 'https://github.com/deepaksharma26/MeritMission.git'
+                sh 'npm install'
             }
         }
-        stage('Checkout') {
+        stage('Test') {
             steps {
-                // Checkout your source code from version control
-                // For example, if using Git:
-                git branch: '${env.BRANCH_NAME}', url: 'https://github.com/deepaksharma26/MeritMission.git'
+                sh './jenkins/scripts/test.sh'
             }
         }
-
-      
-            stage('Build') {
+        stage('Deliver') {
             steps {
-                // Use Node.js and npm to build the React app
-                sh "npm install"
-                sh "npm run build"
-                sh "ls"
+                sh './jenkins/scripts/deliver.sh'
+                input message: 'Finished using the web site? (Click "Proceed" to continue)'
+                sh './jenkins/scripts/kill.sh'
             }
-        } 
-        // stage('Build and Deploy') {
-        //     steps {
-        //         script {
-        //           sh """ 
-        //               scp -r build/* root@143.244.142.123:/var/www/html
-        //           """
-        //         }
-        //     }
-        // }
+        }
     }
 }
