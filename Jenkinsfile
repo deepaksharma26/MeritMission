@@ -64,9 +64,9 @@ pipeline {
       steps{
         sh('ls -la')
         sh('pwd')
-        sh('sshpass -p Deepak@26 ssh-copy-id -i ~/.ssh/id_rsa/pub root@143.244.142.123') 
-        sh('sshpass -p Deepak@26 scp -v -r $WORKSPACE/build root@143.244.142.123:"/var/www/html"')
-        sh('sshpass -p Deepak@26 ssh -o StrictHostKeyChecking=no root@143.244.142.123 -t "echo $user | sudo -S cp -r path /var/www/html"')
+        sh('sshpass -p Deepak@26 ssh-copy-id -i ~/.ssh/id_rsa/pub root@167.71.234.205') 
+        sh('sshpass -p Deepak@26 scp -v -r $WORKSPACE/build root@167.71.234.205:"/var/www/html"')
+        sh('sshpass -p Deepak@26 ssh -o StrictHostKeyChecking=no root@167.71.234.205 -t "echo $user | sudo -S cp -r path /var/www/html"')
       }
     }
   }
