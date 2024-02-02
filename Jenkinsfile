@@ -1,7 +1,7 @@
 def applicationName = "Merit Mission School"
 def vaultUrl = ''
 def vaultPath = ''
-def json
+def json 
 def secrets
 def gitInfo
 def getEnvironment() {
