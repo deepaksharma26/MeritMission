@@ -29,45 +29,42 @@ def getTargets() {
         ]
     }
 }     
-
 pipeline {
-  // agent { dockerfile true }
-
-  stages {
-    stage('Checkout') {
-        steps {
-                // Check out your source code from your version control system (e.g., Git)
-            git 'https://github.com/deepaksharma26/MeritMission.git'
+    agent any
+    tools {
+        nodejs 'node-8.1.3'
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh 'nodejs --version'
+                sh 'npm install'
+                sh 'gulp lint'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'nodejs --version'
+                sh 'gulp test'
+            }
         }
     }
-    stage("install") {
-      steps {
-        sh 'yarn install'
-      }
+    post {
+        always {
+            echo 'One way or another, I have finished'
+            deleteDir() /* clean up our workspace */
+        }
+        success {
+            echo 'I succeeeded!'
+        }
+        unstable {
+            echo 'I am unstable :/'
+        }
+        failure {
+            echo 'I failed :('
+        }
+        changed {
+            echo 'Things were different before...'
+        }
     }
-    stage("styles"){
-      steps{
-        sh 'yarn styles'
-      }
-    }
-    stage("test"){
-      steps {
-        sh 'yarn test'
-      }
-    }
-    stage("build"){
-      steps{
-        sh('yarn build')
-      }
-    }
-    stage("pre-deploy"){
-      steps{
-        sh('ls -la')
-        sh('pwd')
-        sh('sshpass -p Deepak@26 ssh-copy-id -i ~/.ssh/id_rsa/pub root@167.71.234.205') 
-        sh('sshpass -p Deepak@26 scp -v -r $WORKSPACE/build root@167.71.234.205:"/var/www/html"')
-        sh('sshpass -p Deepak@26 ssh -o StrictHostKeyChecking=no root@167.71.234.205 -t "echo $user | sudo -S cp -r path /var/www/html"')
-      }
-    }
-  }
 }
